@@ -1,0 +1,53 @@
+<#@ template debug="false" hostspecific="false" language="C#" 
+    compilerOptions="/langversion:6" #>
+<#@ output extension=".cs" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Text" #>
+<#
+  Entities.Add(new Entity
+  {
+    Name = "Person",
+    Properties = new List<(string name, string type)>
+    {
+      ("Name", "string")
+    }
+  });
+#>
+namespace DotNetDesignPatternDemos.Command.Generated
+{
+  using System.Collections.Generic;
+<# foreach (var e in Entities) { #>
+  public class <#= e.Name #>
+  {
+<# foreach (var (name, type) in e.Properties) { #>
+    public long Id;
+    public <#= type #> <#= name #>;
+    <# } #>
+  }<# } #>
+
+  public class Repository
+  {<# foreach (var e in Entities) { #>
+    public List<<#= e.Name #>> <#= e.Name#>s = new List<<#= e.Name #>>();
+    <# } #>
+  }
+
+  <# foreach (var e in Entities) { #>
+  public class Create<#= e.Name #>Command
+  {
+    <# foreach (var (name, type) in e.Properties) { #>
+    public <#= type #> <#= name #> { get; set; }
+    <# }#>
+  }
+  <# } #>
+}
+
+<#+
+  public class Entity
+  {
+    public string Name;
+    public List<(string name, string type)> Properties;
+  }
+
+  public List<Entity> Entities = new List<Entity>();
+
+#>
